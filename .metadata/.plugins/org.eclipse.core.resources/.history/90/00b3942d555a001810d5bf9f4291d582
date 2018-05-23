@@ -1,0 +1,75 @@
+package demo.repo;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import demo.beans.Customer;
+import demo.beans.Wallet;
+
+import java.lang.annotation.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class WalletRepoImple implements WalletRepoInterface {
+     	   static int id;
+	       static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+           static final String DB_URL = "jdbc:mysql://localhost:3309/test";
+	       Connection conn = null;
+public boolean save(Customer c) throws SQLException, ClassNotFoundException{  
+	   
+		    Class.forName("com.mysql.jdbc.Driver");
+	        System.out.println("Connecting to a selected database...");
+	        conn = DriverManager.getConnection(DB_URL);
+	        System.out.println("Connected database successfully...");
+	        
+	        int rows; 
+	        id++;
+	        String name = c.getName();
+	        String mobileNo= c.getMobileNumber();
+	        Wallet wallet = c.getWallet();
+	        float balance = wallet.getBalance();
+		 	
+	        String insertQuery1;
+			insertQuery1 = "insert into Wallet values("+ id +","+ balance +")";
+			Statement insertStatement = conn.createStatement();
+			rows = insertStatement.executeUpdate(insertQuery1);
+			String insertQuery2 = "insert into Customer values(" + id +",'"+ name +"',"+ mobileNo + ","+ id +")";
+			Statement insertStatement1 = conn.createStatement();
+			rows = insertStatement1.executeUpdate(insertQuery2);
+		    if(rows > 0){
+				System.out.println("Row is added in a table");
+				}
+		    return true;
+	}
+	public Customer findOne(String mobileNumber) throws SQLException{
+		    Customer c = new Customer();
+		    Wallet w = new Wallet();
+	    	String query = "select  Customer.name, Customer.mobile,wallet.balance " +
+	             "from Customer natural join Wallet " +
+	             "where  Customer.id = Wallet.id and" +
+	             "mobileNo like "+ mobileNumber+";";
+		    
+	    	try {
+	    		    Statement insertStatement = conn.createStatement();
+		    	    ResultSet rs = insertStatement.executeQuery(query);
+	    	        //while (rs.next()) {
+	    	            String name = rs.getString(1);
+	    	            String mobileNo = rs.getString(2);
+	    	            float balance = rs.getFloat(3);
+	    	            w.setBalance(balance);
+	    	            
+	    	        //}
+	    	    } catch (SQLException e ) {
+	    	        e.printStackTrace();
+			
+
+	    }
+			return c;
+    }
+}

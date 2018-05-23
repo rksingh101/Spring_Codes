@@ -1,0 +1,35 @@
+package demo;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import demo.beans.Customer;
+import demo.repo.WalletRepoImpl;
+import demo.service.WalletServiceImpl;
+
+@Configuration
+@ComponentScan
+public class AppConfig {
+	@Bean(value = "map")
+	public Map<String, Customer> getMap()
+	{
+		return new HashMap<String,Customer>();
+	}
+	
+	@Bean(value = "repo")
+	public WalletRepoImpl getRepoImpl()
+	{
+	    return new WalletRepoImpl(getMap());
+	}
+	
+    @Bean(value = "service")
+	public WalletServiceImpl walletServiceImpl()
+	{
+		return new WalletServiceImpl(getRepoImpl());
+	}
+
+}

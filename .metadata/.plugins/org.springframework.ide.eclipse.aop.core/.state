@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="02SpringApp"/>
+<aop-project name="05jdbcapp"/>
+<aop-project name="04JavaConfig"/>
+<aop-project name="03AnnotationApp"/>
+</aop-reference-model>
